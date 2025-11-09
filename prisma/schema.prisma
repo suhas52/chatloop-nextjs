@@ -12,25 +12,42 @@ datasource db {
 }
 
 model User {
-  id         String   @id @default(uuid())
-  first_name String
-  last_name  String
-  username   String
-  created_at DateTime @default(now())
+  id                   String         @id @default(uuid())
+  first_name           String
+  last_name            String
+  username             String
+  created_at           DateTime       @default(now())
+  conversationsAsUser1 Conversation[] @relation("user1Conversations")
+  conversationsAsUser2 Conversation[] @relation("user2Conversations")
+  messagesAsSender     Message[]      @relation("senderMessage")
+  messagesAsReceiver   Message[]      @relation("receiverMessage")
 }
 
 model Conversation {
   id         String              @id @default(uuid())
   created_at DateTime            @default(now())
   status     conversation_status @default(active)
+  user1Id    String
+  user1      User                @relation("user1Conversations", fields: [user1Id], references: [id])
+  user2Id    String
+  user2      User                @relation("user2Conversations", fields: [user2Id], references: [id])
+  messages   Message[]
+
+  @@unique([user1Id, user2Id])
 }
 
 model Message {
-  id         String         @id @default(uuid())
-  content    String
-  created_at DateTime       @default(now())
-  updated_at DateTime       @default(now())
-  status     message_status @default(sent)
+  id             String         @id @default(uuid())
+  content        String
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
+  status         message_status @default(sent)
+  senderId       String
+  sender         User           @relation("senderMessage", fields: [senderId], references: [id])
+  receiverId     String
+  receiver       User           @relation("receiverMessage", fields: [receiverId], references: [id])
+  conversation   Conversation?  @relation(fields: [conversationId], references: [id])
+  conversationId String?
 }
 
 enum conversation_status {
