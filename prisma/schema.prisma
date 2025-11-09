@@ -10,3 +10,37 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id         String   @id @default(uuid())
+  first_name String
+  last_name  String
+  username   String
+  created_at DateTime @default(now())
+}
+
+model Conversation {
+  id         String              @id @default(uuid())
+  created_at DateTime            @default(now())
+  status     conversation_status @default(active)
+}
+
+model Message {
+  id         String         @id @default(uuid())
+  content    String
+  created_at DateTime       @default(now())
+  updated_at DateTime       @default(now())
+  status     message_status @default(sent)
+}
+
+enum conversation_status {
+  active
+  archived
+}
+
+enum message_status {
+  sent
+  delivered
+  read
+  failed
+}
