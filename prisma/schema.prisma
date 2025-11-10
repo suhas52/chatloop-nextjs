@@ -15,7 +15,8 @@ model User {
   id                   String         @id @default(uuid())
   first_name           String
   last_name            String
-  username             String
+  username             String         @unique
+  password_hash        String
   created_at           DateTime       @default(now())
   conversationsAsUser1 Conversation[] @relation("user1Conversations")
   conversationsAsUser2 Conversation[] @relation("user2Conversations")

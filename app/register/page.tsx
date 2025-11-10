@@ -1,6 +1,10 @@
+import { registerUser } from "../actions";
+
+
 function RegisterForm() {
+
     return <div>
-        <form className="p-2 flex-col">
+        <form action={registerUser} className="p-2 flex-col">
             <label>First Name:</label>
             <input name="first_name" type="text" className="border"/>
             <label>Last Name:</label>
