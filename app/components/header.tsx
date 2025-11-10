@@ -17,7 +17,7 @@ export function Header() {
     ) : (
         <>
         <Link href={"/users"}>Users</Link>
-        <Link href={"/"}>Conversations</Link>
+        <Link href={"/conversations"}>Conversations</Link>
         </>
     )}    
     

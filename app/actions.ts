@@ -23,3 +23,39 @@ export async function registerUser(formData: FormData) {
         }
     })
 }
+
+
+export async function getConversation(loggedUser: any, otherUser: any) {
+    const checkConvo = await prisma.conversation.findFirst({
+        where: {
+            OR: [
+                {user1Id: loggedUser, user2Id: otherUser},
+                {user1Id: otherUser, user2Id: loggedUser}
+            ]
+        },
+        select: {
+            id: true
+        }
+    })
+    if (!checkConvo) {
+        const newConvo = await prisma.conversation.create({
+            data: {
+                user1Id: loggedUser,
+                user2Id: otherUser
+            }
+        })
+        return newConvo.id;
+    }
+    return checkConvo.id
+}
+
+export async function sendMessage(sender, receiver, content, conversationId) {
+    const newMessage = await prisma.message.create({
+        data: {
+            content: content,
+            conversationId: conversationId,
+            senderId: sender,
+            receiverId: receiver
+        }
+    })
+}
